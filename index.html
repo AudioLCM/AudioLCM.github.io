@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EchoAudio: Efficient and High-Quality Text-to-Audio Generation with Minimal Inference Steps</title> 
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="helper.js" defer></script>
+    <style>
+      td {
+        vertical-align: middle;
+      }
+      audio {
+        width: 20vw;
+        min-width: 100px;
+        max-width: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+      <div class="text-center">
+        <h1>EchoAudio</h1><h3>Efficient and High-Quality Text-to-Audio Generation with Minimal Inference Steps</h3>
+        <p class="lead fw-bold">
+          |<a
+            href=""
+            class="btn border-white bg-white fw-bold"
+            >paper</a
+          >|
+        </p>
+        <p class="fst-italic mb-0">
+        Anonymous
+        </p>
+        <p><b></b></p>
+      </div>
+      <p>
+        <b>Abstract.</b>  
+        Recent advancements in Latent Diffusion Models (LDMs) have propelled them to the forefront of various generative tasks. However, their iterative sampling process poses a significant computational burden, resulting in slow generation speeds and limiting their application in text-to-audio generation deployment. In this work, we introduce EchoAudio, a novel consistency-based model tailored for efficient and high-quality text-to-audio generation. Unlike prior approaches that address noise removal through iterative processes, EchoAudio integrates Consistency Models (CMs) into the generation process, facilitating rapid inference through a mapping from any point at any time step to the trajectory's initial point. To overcome the convergence issue inherent in LDMs with reduced sample iterations, we propose the Guided Latent Consistency Distillation with a multi-step Ordinary Differential Equation (ODE) solver. This innovation shortens the time schedule from thousands to dozens of steps while maintaining sample quality, thereby achieving fast convergence and high-quality generation. Furthermore, to optimize the performance of transformer-based neural network architectures, we integrate the advanced techniques pioneered by LLaMA into the foundational framework of transformers. This architecture supports stable and efficient training, ensuring robust performance in text-to-audio synthesis. Experimental results on text-to-audio generation and text-to-music synthesis tasks demonstrate that EchoAudio needs only 2 iterations to synthesize high-fidelity audios, while it maintains sample quality competitive with state-of-the-art models using hundreds of steps. EchoAudio enables a sampling speed of 333x faster than real-time on a single NVIDIA 4090Ti GPU, making generative models practically applicable to text-to-audio generation deployment. Our extensive preliminary analysis shows that each design in EchoAudio is effective.
+      </p>
+    </div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+    <h2 id="model-overview" style="text-align: center;">EchoAudio Overview</h2>
+    <body>
+    <p style="text-align: center;">
+        <img src="overall.png" height="200" width="800" class="img-fluid">
+    </p>
+    </body>
+        <p>
+            An illustration of EchoSpeech. EchoAudio propose the Guided Consistency Distillation with k-step ODE solver. c is the text embedding and 𝜔 is the classifier-free guidance scale.
+        </p>
+</div>
+ 
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+    <h2 id="model-overview" style="text-align: left;">Table of Contents</h2>
+    <body>
+    <p style="text-align: left;">
+    <ul style="list-style: outside none none !important;">
+       <li><a href="#efficiency" class="btn border-white bg-white fw-bold">Text-to-Audio Generation</a></li>
+       <li><a href="#diversity" class="btn border-white bg-white fw-bold">Text-to-Music Generation</a></li>
+       <li><a href="#prompting" class="btn border-white bg-white fw-bold">Preliminary Analyses - Classifier Free Guidance scale</a></li>
+       <li><a href="#prompting2" class="btn border-white bg-white fw-bold">Preliminary Analyses - skip</a></li>
+    </ul>
+    </p>
+    </body>
+</div>
+
+
+    <div class="container shadow p-5 mb-5 bg-white rounded">
+      <h3>Text-to-Audio Generation<a id="efficiency"/></h3>
+      <div class="container pt-3 table-responsive">
+        <table
+          class="table table-hover"
+          id="supervision-efficiency-table">
+          <thead>
+            <tr>
+              <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+              <th style="text-align: center">Ground-truth</th>
+              <th style="text-align: center">EchoAudio</th>
+              <th style="text-align: center">AudioGen</th>
+              <th style="text-align: center">AudioLDM</th>
+              <th style="text-align: center">AudioLDM2</th>
+              <th style="text-align: center">Make-an-Audio</th>
+              <th style="text-align: center">Make-an-Audio2</th>
+              <th style="text-align: center">Tango</th>
+              <th style="text-align: center">Teacher</th>
+              <!-- <th style="text-align: center">Regression</th> -->
+              <!-- <th style="text-align: center">Random</th> -->
+            </tr>
+          </thead>
+          <tbody>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <div class="container shadow p-5 mb-5 bg-white rounded">
+        <h3>Text-to-Music Generation<a id="diversity"/></h3>
+        <div class="container pt-3 table-responsive">
+          <table
+            class="table table-hover"
+            id="speech-diversity">
+            <thead>
+              <tr>
+                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                <th style="text-align: center">Ground-truth</th>
+                <th style="text-align: center">EchoAudio</th>
+                <th style="text-align: center">AudioLDM2</th>
+                <th style="text-align: center">MusicGen</th>
+                <th style="text-align: center">MusicLDM</th>
+                <th style="text-align: center">Riffusion</th>
+                <th style="text-align: center">Teacher</th>
+                <!-- <th style="text-align: center">Regression</th> -->
+                <!-- <th style="text-align: center">Random</th> -->
+              </tr>
+            </thead>
+            <tbody>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+
+    <div class="container shadow p-5 mb-5 bg-white rounded">
+        <h3>Preliminary Analyses - Classifier Free Guidance scale<a id="prompting"/></h3>
+        <div class="container pt-3 table-responsive">
+          <table
+            class="table table-hover"
+            id="whatever-prompting">
+            <thead>
+              <tr>
+                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                <th style="text-align: center">Ground-truth</th>
+                <th style="text-align: center">scale 1</th>
+                <th style="text-align: center">scale 3</th>
+                <th style="text-align: center">scale 5</th>
+                <th style="text-align: center">scale 7</th>
+                <th style="text-align: center">scale 9</th>
+                <!-- <th style="text-align: center">Regression</th> -->
+                <!-- <th style="text-align: center">Random</th> -->
+              </tr>
+            </thead>
+            <tbody>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      
+    <div class="container shadow p-5 mb-5 bg-white rounded">
+        <h3>Preliminary Analyses - skip<a id="prompting2"/></h3>
+        <div class="container pt-3 table-responsive">
+          <table
+            class="table table-hover"
+            id="whatever-prompting2">
+            <thead>
+              <tr>
+                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                <th style="text-align: center">Ground-truth</th>
+                <th style="text-align: center">skip 1</th>
+                <th style="text-align: center">skip 5</th>
+                <th style="text-align: center">skip 10</th>
+                <th style="text-align: center">skip 20</th>
+                <th style="text-align: center">skip 50</th>
+                <!-- <th style="text-align: center">Regression</th> -->
+                <!-- <th style="text-align: center">Random</th> -->
+              </tr>
+            </thead>
+            <tbody>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+               <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+  </body>
+</html>
