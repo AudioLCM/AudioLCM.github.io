@@ -62,8 +62,8 @@
     <ul style="list-style: outside none none !important;">
        <li><a href="#efficiency" class="btn border-white bg-white fw-bold">Text-to-Audio Generation</a></li>
        <li><a href="#diversity" class="btn border-white bg-white fw-bold">Text-to-Music Generation</a></li>
-       <li><a href="#prompting" class="btn border-white bg-white fw-bold">Preliminary Analyses - Classifier Free Guidance scale</a></li>
-       <li><a href="#prompting2" class="btn border-white bg-white fw-bold">Preliminary Analyses - skip</a></li>
+       <li><a href="#prompting" class="btn border-white bg-white fw-bold">Preliminary Analyses - Classifier-free Guidance</a></li>
+       <li><a href="#prompting2" class="btn border-white bg-white fw-bold">Preliminary Analyses - Multi-step ODE Solver</a></li>
     </ul>
     </p>
     </body>
@@ -78,16 +78,16 @@
           id="supervision-efficiency-table">
           <thead>
             <tr>
-              <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+              <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
               <th style="text-align: center">Ground-truth</th>
               <th style="text-align: center">EchoAudio</th>
-              <th style="text-align: center">AudioGen</th>
-              <th style="text-align: center">AudioLDM</th>
-              <th style="text-align: center">AudioLDM2</th>
-              <th style="text-align: center">Make-an-Audio</th>
-              <th style="text-align: center">Make-an-Audio2</th>
-              <th style="text-align: center">Tango</th>
               <th style="text-align: center">Teacher</th>
+              <th style="text-align: center">AudioGen</th>
+              <th style="text-align: center">Make-an-Audio</th>
+              <th style="text-align: center">AudioLDM</th>
+              <th style="text-align: center">Tango</th>
+              <th style="text-align: center">AudioLDM2</th>
+              <th style="text-align: center">Make-an-audio2</th>
               <!-- <th style="text-align: center">Regression</th> -->
               <!-- <th style="text-align: center">Random</th> -->
             </tr>
@@ -127,14 +127,15 @@
             id="speech-diversity">
             <thead>
               <tr>
-                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                ['text', 'target', 'EchoAudio', 'teacher', 'Riffusion', 'MusicGen', 'MusicLDM', 'AudioLDM2']
+                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
                 <th style="text-align: center">Ground-truth</th>
                 <th style="text-align: center">EchoAudio</th>
-                <th style="text-align: center">AudioLDM2</th>
+                <th style="text-align: center">Teacher</th>
+                <th style="text-align: center">Riffusion</th>
                 <th style="text-align: center">MusicGen</th>
                 <th style="text-align: center">MusicLDM</th>
-                <th style="text-align: center">Riffusion</th>
-                <th style="text-align: center">Teacher</th>
+                <th style="text-align: center">AudioLDM2</th>
                 <!-- <th style="text-align: center">Regression</th> -->
                 <!-- <th style="text-align: center">Random</th> -->
               </tr>
@@ -174,13 +175,13 @@
             id="whatever-prompting">
             <thead>
               <tr>
-                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
                 <th style="text-align: center">Ground-truth</th>
-                <th style="text-align: center">scale 1</th>
-                <th style="text-align: center">scale 3</th>
-                <th style="text-align: center">scale 5</th>
-                <th style="text-align: center">scale 7</th>
-                <th style="text-align: center">scale 9</th>
+                <th style="text-align: center">Scale 1</th>
+                <th style="text-align: center">Scale 3</th>
+                <th style="text-align: center">Scale 5</th>
+                <th style="text-align: center">Scale 7</th>
+                <th style="text-align: center">Scale 9</th>
                 <!-- <th style="text-align: center">Regression</th> -->
                 <!-- <th style="text-align: center">Random</th> -->
               </tr>
@@ -216,13 +217,13 @@
             id="whatever-prompting2">
             <thead>
               <tr>
-                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspText Prompts&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
                 <th style="text-align: center">Ground-truth</th>
-                <th style="text-align: center">skip 1</th>
-                <th style="text-align: center">skip 5</th>
-                <th style="text-align: center">skip 10</th>
-                <th style="text-align: center">skip 20</th>
-                <th style="text-align: center">skip 50</th>
+                <th style="text-align: center">k 1</th>
+                <th style="text-align: center">k 5</th>
+                <th style="text-align: center">k 10</th>
+                <th style="text-align: center">k 20</th>
+                <th style="text-align: center">k 50</th>
                 <!-- <th style="text-align: center">Regression</th> -->
                 <!-- <th style="text-align: center">Random</th> -->
               </tr>

@@ -25,7 +25,7 @@ function createAudioHTML(path) {
   
   function generateT2A(tableId) {
     let table = document.getElementById(tableId);
-    let folders = ['text', 'target', 'EchoAudio', 'teacher', 'AudioLDM2', 'Make-an-audio2', 'Tango', 'Make-an-audio', 'AudioGen', 'AudioLDM'];
+    let folders = ['text', 'target', 'EchoAudio', 'teacher', 'AudioGen', 'Make-an-audio', 'AudioLDM', 'Tango', 'AudioLDM2', 'Make-an-audio2'];
   
     for (var i = 0; i < 20; i++) {
       let paddedNumber = i.toString().padStart(5, '0');  
@@ -36,7 +36,7 @@ function createAudioHTML(path) {
 
   function generateT2M(tableId) {
     let table = document.getElementById(tableId);
-    let folders = ['text', 'target', 'EchoAudio', 'teacher', 'MusicGen', 'MusicLDM', 'AudioLDM2', 'Riffusion'];
+    let folders = ['text', 'target', 'EchoAudio', 'teacher', 'Riffusion', 'MusicGen', 'MusicLDM', 'AudioLDM2'];
   
     for (var i = 0; i < 20; i++) {
       let paddedNumber = i.toString().padStart(5, '0');  
